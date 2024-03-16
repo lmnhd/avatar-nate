@@ -180,7 +180,7 @@ export async function POST(req: Request) {
       voice: "Rachel",
       text: "Hello, I am a helpful assistant. How can I help you today?",
       model_id: "eleven_multilingual_v2",
-      // output_format: 'mp3'
+     
     });
     //await play(audio);
     return audio;
