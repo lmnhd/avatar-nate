@@ -1,5 +1,5 @@
-import { PLACE_ELEMENT, PLOT_ELEMENT, BEAT_ELEMENT } from "constants.js";
-import { Scene, Story, getPlaceDescription } from "entities/index.js";
+import { PLACE_ELEMENT, PLOT_ELEMENT, BEAT_ELEMENT } from "../constants.js";
+import { Scene, Story, getPlaceDescription } from "../entities/index.js";
 import { stripRemoveEnd } from "./strip_end.js";
 
 export function renderStory(story: Story): string {

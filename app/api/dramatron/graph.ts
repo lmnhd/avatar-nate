@@ -41,7 +41,7 @@ const graphState = {
 
 export async function graph() {
   const workFlow = new StateGraph<GraphState>({
-    channels: graphState;
+    channels: graphState
   })
 
   const llm = new ChatAnthropic({

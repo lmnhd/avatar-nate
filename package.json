@@ -29,6 +29,7 @@
     "fs": "^0.0.1-security",
     "langchain": "^0.1.25",
     "langsmith": "^0.1.13",
+    "lint": "^0.8.19",
     "lucide-react": "^0.356.0",
     "ml-distance": "^4.0.1",
     "next": "14.1.1",

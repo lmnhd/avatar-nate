@@ -56,7 +56,7 @@ export class StoryGenerator {
   /**
    * The level the story generator is on.
    */
-  _level: number;
+  // _level: number;
 
   _title: Title;
 

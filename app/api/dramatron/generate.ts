@@ -11,7 +11,7 @@ import { PromptPrefixKeys } from "./prefixes/types.js";
 import { Title } from "./entities/title.js";
 import { Characters } from "./entities/character.js";
 import { SYSTEM_DEFAULT } from "./prompts/system.js";
-import { END_MARKER, TITLE_ELEMENT} from "./constants.js";
+import { END_MARKER, TITLE_ELEMENT } from "./constants.js";
 
 interface GenerateTextInput {
   generationPrompt: Array<ChatPromptTemplate>;
@@ -47,19 +47,23 @@ export async function generateTitle(
   input: GenerateTitleInput,
   config?: RunnableConfig
 ): Promise<[Title, string]> {
-  const titlePrefix = `${input.prefixes.TITLES_PROMPT} ${input.storyline} ${TITLE_ELEMENT}` ;
+  const titlePrefix = `${input.prefixes.TITLES_PROMPT} ${input.storyline} ${TITLE_ELEMENT}`;
   const titlePrompt = ChatPromptTemplate.fromMessages([
     SYSTEM_DEFAULT,
-    ["human", titlePrefix]
-  ])
-  let titleText = await generateText({
-    generationPrompt: [titlePrompt],
-    llm: input.llm,
-    seed: input.seed
-  }, config);
+    ["human", titlePrefix],
+  ]);
+  let titleText = await generateText(
+    {
+      generationPrompt: [titlePrompt],
+      llm: input.llm,
+      seed: input.seed,
+    },
+    config
+  );
   if (!titleText.endsWith(END_MARKER)) {
     titleText += END_MARKER;
   }
+  return [new Title(titleText), titleText];
 }
 
 interface GenerateCharactersInput {
