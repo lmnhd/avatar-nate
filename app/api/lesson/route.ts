@@ -184,7 +184,7 @@ export async function POST(req: Request) {
   await play(audio);
   
   //await playAudio();
-  return NextResponse.json(audio)
+  return NextResponse.json(response)
 
 // return new StreamingTextResponse(stream, {headers: {
 //   data: JSON.stringify(audio)
