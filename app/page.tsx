@@ -11,8 +11,9 @@ import {
 import { Button } from "@/components/ui/button";
 
 
+
 export default function Chat() {
-  const { messages, input, handleInputChange, handleSubmit } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, data, metadata } = useChat({
     //api: '/api/conversation-retrieval-chain'
     //api: '/api/agent'
     api: "/api/lesson",
@@ -23,8 +24,12 @@ export default function Chat() {
   const [systemPrompt, setSystemPrompt] = useState(
     "You are a helpful assistant"
   );
+
+  useEffect(() => {
+   
+  }, [messages])
  
-  
+  console.log("data", metadata, data, messages, input, systemPrompt)
 
   return (
     <div className="h-full scrollbar-hide">

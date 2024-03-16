@@ -106,6 +106,7 @@ import Exa from "exa-js";
 import { ToolExecutor } from "@langchain/langgraph/prebuilt";
 import { END, StateGraph } from "@langchain/langgraph";
 import { ElevenLabsClient, play, stream as elStream } from "elevenlabs";
+import { json } from "stream/consumers";
 
 //export const runtime = "edge";
 
@@ -136,7 +137,7 @@ export async function POST(req: Request) {
   //return NextResponse.json(response);
 
   const data = new experimental_StreamData();
-
+//let audio:any
   // important: use LangChainStream from the AI SDK:
   const { stream, handlers } = LangChainStream({
     // onCompletion: (resp) => {
@@ -165,34 +166,31 @@ export async function POST(req: Request) {
     onFinal: (resp) => {
       console.log("onFinal", resp);
       //data.appendMessageAnnotation({ text: "resp" });
-      data.append(JSON.stringify(resp));
+      //data.append(audio);
       data.close();
     },
     experimental_streamData: true,
   });
 
-  const playAudio = async () => {
-    const elevenLabs = new ElevenLabsClient({
-      apiKey: process.env.ELEVENLABS_API_KEY,
-    });
+  const elevenLabs = new ElevenLabsClient({
+    apiKey: process.env.ELEVENLABS_API_KEY,
+  });
 
-    const audio = await elevenLabs.generate({
-      voice: "Rachel",
-      text: "Hello, I am a helpful assistant. How can I help you today?",
-      model_id: "eleven_multilingual_v2",
-     
-    });
-    //await play(audio);
-    return audio;
-  };
-
-
+ const audio = await elevenLabs.generate({
+    voice: "Rachel",
+    text: "Hello,",
+    model_id: "eleven_multilingual_v2",
+  });
+  await play(audio);
+  
   //await playAudio();
-  //return NextResponse.json(response)
+  return NextResponse.json(audio)
 
-  //return new StreamingTextResponse(stream, {}, data);
+// return new StreamingTextResponse(stream, {headers: {
+//   data: JSON.stringify(audio)
+// }}, data);
 
-  return NextResponse.json({audio: await playAudio()});
+ // return NextResponse.json(audio);
 
   // RETRIEVER
   const INDEX_NAME = "avatar-embeddings-1";
