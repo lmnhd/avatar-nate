@@ -29,7 +29,7 @@ export default function Chat() {
    
   }, [messages])
  
-  console.log("data", metadata, data, messages, input, systemPrompt)
+  console.log("data", metadata, data, messages, input)
 
   return (
     <div className="h-full scrollbar-hide">
