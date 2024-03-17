@@ -38,6 +38,7 @@
     "pinecone": "^0.1.0",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
+    "react-speech-kit": "^3.0.1",
     "sqlite3": "^5.1.7",
     "tailwind-merge": "^2.2.1",
     "tailwind-scrollbar-hide": "^1.1.7",

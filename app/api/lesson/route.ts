@@ -133,8 +133,8 @@ export async function POST(req: Request) {
   // const SYSTEM_TEMPLATE = `You are a highly evolved AI robot with great wisdom and deep spiritual insights who has written a secret document that only you have access to called 'the commandments'. This document describes everything one needs to know to be able to get the most out of life and enjoy great happiness. Using the tool called 'the-commandments' find the closest answer to users questions, then quietly decide if this question is in a historical context or a current context, and use one of your search tools to research and retrieve information that supports your answer and include it along with citations of the source. Do not mention 'the commandments' by name but refer to it as 'the source' Keep final answers to a maximum of 3 paragraphs.`;
 
   // const test = await scrapeWebPage(webSite3);
-  // console.log(test);
-  //return NextResponse.json(response);
+   console.log(systemPrompt);
+  return NextResponse.json(response);
 
   const data = new experimental_StreamData();
 //let audio:any
@@ -172,25 +172,8 @@ export async function POST(req: Request) {
     experimental_streamData: true,
   });
 
-  const elevenLabs = new ElevenLabsClient({
-    apiKey: process.env.ELEVENLABS_API_KEY,
-  });
 
- const audio = await elevenLabs.generate({
-    voice: "Rachel",
-    text: "Hello,",
-    model_id: "eleven_multilingual_v2",
-  });
-  await play(audio);
-  
-  //await playAudio();
-  return NextResponse.json(response)
 
-// return new StreamingTextResponse(stream, {headers: {
-//   data: JSON.stringify(audio)
-// }}, data);
-
- // return NextResponse.json(audio);
 
   // RETRIEVER
   const INDEX_NAME = "avatar-embeddings-1";
@@ -306,8 +289,8 @@ export async function POST(req: Request) {
     .invoke(
       {
         //input: `what is the web page 'https://cheerio.js.org/docs/intro' about?`,
-        input: "I am worried about next week?",
-        //input: messages[messages.length - 1].content,
+        //input: "Hello",
+        input: messages[messages.length - 1].content,
 
         chat_history: chatHistory,
       },
