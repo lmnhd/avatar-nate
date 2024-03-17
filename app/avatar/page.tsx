@@ -11,6 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSpeechSynthesis } from "react-speech-kit";
 
+
 export default function Chat() {
   
   const [systemPrompt, setSystemPrompt] = useState(
@@ -87,7 +88,7 @@ export default function Chat() {
           <div className="h-6 text-white ">...</div>
         </CollapsibleTrigger>
         <CollapsibleContent className="w-full">
-          <div className=" w-full p-4 max-w-3xl? mx-auto  dark:bg-black? bg-gradient-to-b from-white via-white-/90 to-white/0 backdrop-blur-sm">
+          <div className=" w-full p-4 max-w-3xl? mx-auto  dark:bg-black? bg-gradient-to-b? from-white via-white-/90 to-white/0 backdrop-blur-sm">
             <h1 className="w-full text-2xl font-bold">System Instructions</h1>
             <textarea
             cols={1}
@@ -120,7 +121,7 @@ export default function Chat() {
                       m.role === "user" ? "text-left" : "text-right"
                     )}
                   >
-                    {m.role === "user" ? "Me: " : "Agent: "}
+                    {m.role === "user" ? "Me: " : "Avatar-Nate: "}
                   </p>
                   {m.role === "user" ? (
                     <p className="pl-4 text-left text-blue-600">{m.content}</p>
