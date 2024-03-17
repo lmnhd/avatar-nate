@@ -113,7 +113,7 @@ export default function Chat() {
             ? messages.map((m) => (
                 <div
                   key={m.id}
-                  className="px-4 py-4 whitespace-pre-wrap rounded-md shadow-sm dark:bg-gradient-to-t dark:from-slate-500/0 dark:via-slate-500/30 dark:to-slate-500/0 bg-slate-500/20"
+                  className="px-4 py-4 whitespace-pre-wrap rounded-md shadow-sm dark:bg-gradient-to-t? dark:from-slate-500/0 dark:via-slate-500/30 dark:to-slate-500/0 bg-slate-500/20"
                 >
                   <p
                     className={cn(
