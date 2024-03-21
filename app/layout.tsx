@@ -1,13 +1,19 @@
+"use client";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { GemIcon } from "lucide-react";
+import { GemIcon, SettingsIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useContext, useState } from "react";
+import AppProvider, { AppContext } from "./context";
+import Header from "@/components/header";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata = {
+
+
+const metadata = {
   title: "CC AI Playground",
   description: "Dream it, build it, share it",
 };
@@ -17,21 +23,21 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+ (AppContext);
   return (
     <html lang="en">
-      <body className={cn('scrollbar-hide',inter.className)}>
+      <body className={cn("h-screen overflow-hidden dark:bg-gradient-to-b dark:from-black/0 dark:to-cyan-900", inter.className)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <div className="fixed top-0 flex items-center justify-between w-full h-12 p-8 bg-white scrollbar-hide">
-          <p className="text-black"><GemIcon/></p>
-            <ThemeToggle />
-           
-          </div>
-          <div className="mt-5 scrollbar-hide">{children}</div>
+         
+          <AppProvider>
+            <Header/>
+            <div className="mt-5 -z-20 mx-auto md:w-2/3 shadow-sm">{children}</div>
+          </AppProvider>
         </ThemeProvider>
       </body>
     </html>

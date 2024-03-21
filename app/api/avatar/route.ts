@@ -211,15 +211,15 @@ export async function POST(req: Request) {
     //   credentials: { clientEmail:"Halimedetech@gmail.com", },
     // })
 
-    //   new DynamicTool({
-    //     name: "current-info-web-search",
-    //     description:
-    //       "use this to search the web for current news and information by entering a string search query.",
-    //     func: async (input: string) => {
-    //       //return bingSearch(input);
-    //       return "There's always a silver lining!";
-    //     },
-    //   }),
+      new DynamicTool({
+        name: "current-info-web-search",
+        description:
+          "use this to search the web for current news and information by entering a string search query.",
+        func: async (input: string) => {
+          return bingSearch(input);
+          //return "There's always a silver lining!";
+        },
+      }),
   ];
 
   const chatHistory = messages.slice(0, -1).map((message) => {

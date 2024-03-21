@@ -1,4 +1,4 @@
-import fs from "fs";
+import OpenAI from "openai";
 import {
   StreamingTextResponse,
   LangChainStream,
@@ -120,7 +120,8 @@ export async function POST(req: Request) {
   const {
     messages,
     systemPrompt,
-  }: { messages: Message[]; systemPrompt: string } = await req.json();
+    
+  }: { messages: Message[]; systemPrompt: string} = await req.json();
 
   const SYSTEM_TEMPLATE = `You are an evolved AI robot with great wisdom and deep spiritual insights. You have written a document which describes everything one needs to know to be able to get the most out of life and enjoy great happiness. Using the context below to find the closest answer to users questions, then quietly decide if this question is in a historical context or a current context, and use one of your search tools to research and retrieve information that supports your answer and include it along with citations of the source. Keep final answers to a maximum of 3 paragraphs.
   
@@ -133,10 +134,12 @@ export async function POST(req: Request) {
   // const SYSTEM_TEMPLATE = `You are a highly evolved AI robot with great wisdom and deep spiritual insights who has written a secret document that only you have access to called 'the commandments'. This document describes everything one needs to know to be able to get the most out of life and enjoy great happiness. Using the tool called 'the-commandments' find the closest answer to users questions, then quietly decide if this question is in a historical context or a current context, and use one of your search tools to research and retrieve information that supports your answer and include it along with citations of the source. Do not mention 'the commandments' by name but refer to it as 'the source' Keep final answers to a maximum of 3 paragraphs.`;
 
   // const test = await scrapeWebPage(webSite3);
-   console.log(systemPrompt);
-  return NextResponse.json(response);
+ 
+  
+  
 
   const data = new experimental_StreamData();
+  let mp3: any;
 //let audio:any
   // important: use LangChainStream from the AI SDK:
   const { stream, handlers } = LangChainStream({
@@ -173,9 +176,21 @@ export async function POST(req: Request) {
   });
 
 
+  
+
+// const _messages = [
+//   'Hello, How may I assist you this fine morning?',
+//   'How you feeling today my boy?',
+//   'I am feeling great, thank you for asking. How about you?',
+//   'Why would you ask me something like that?',
+//   'I am just trying to be polite, that is all.',
+// ]
+
+// return NextResponse.json(_messages[Math.floor(Math.random() * _messages.length)]);
 
 
-  // RETRIEVER
+
+// RETRIEVER
   const INDEX_NAME = "avatar-embeddings-1";
   const retriever = await getPineconeRetriever(INDEX_NAME);
 

@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
  
+@layer components {
+  .message {
+    @apply bg-cyan-500 text-white p-4 rounded-lg w-fit;
+  }
+  .assistant {
+    @apply h-40 w-40 object-contain
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -74,3 +83,4 @@
     @apply bg-background text-foreground;
   }
 }
+::-webkit-scrollbar {display:none;}
