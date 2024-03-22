@@ -19,6 +19,9 @@
 .DS_Store
 *.pem
 /public
+/S3Stack/
+/S3Stack
+/S3Stack/*
 
 # debug
 npm-debug.log*

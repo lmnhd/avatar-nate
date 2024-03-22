@@ -115,9 +115,9 @@ function VoiceSynthesizer({
   };
 
   useEffect(() => {
-    if (!window.speechSynthesis) return;
+    if (!window || !window.speechSynthesis) return;
     setSynth(window.speechSynthesis);
-  }, [window]);
+  }, []);
 
   useEffect(() => {
     console.log(`voicesynthesizer useeffect # ${Math.random() * 13}`, messages);
