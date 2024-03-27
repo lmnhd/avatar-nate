@@ -107,9 +107,7 @@ import { ToolExecutor } from "@langchain/langgraph/prebuilt";
 import { END, StateGraph } from "@langchain/langgraph";
 import { ElevenLabsClient, play, stream as elStream } from "elevenlabs";
 import { json } from "stream/consumers";
-import { createPineconeIndex } from "./helpers";
-
-
+import {promptGuide} from '@/app/prompts/openai-prompt-guide'
 
 
 
@@ -121,28 +119,44 @@ const webSite3 = "https://www.amazon.com/";
 
 export async function POST(req: Request) {
   let response: ChainValues | string = { message: "Hello" };
-  //let result: any = "testing";
+  let result: any = "testing";
   const {
     messages,
     systemPrompt,
     
   }: { messages: Message[]; systemPrompt: string} = await req.json();
 
+  // let SYSTEM_TEMPLATE = `You are a helpful assistant who can research and provide information about anything. Upon receiving a question from the user, use the web browser to search for a website that will provide the best information to answer the question. Then use the web browser again to go to the previously found web page and summarize it's content to return to the user as the answer.`;
 
-const url = 'https://www.songlyrics.com/en-vogue/don-t-go-lyrics/'
-const result = await fetch(url, {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
+// Read text from local file
+const text = promptGuide()
 
-})
-const text = await result.text()
-console.log(text)
+const template = `"""{text}
+------------------
+------------------
+------------------
+Based on the above instructions, help me write a good prompt template.
+This template should be a python f-string. It can take in any number of variables depending on my objective.
+
+Return your answer in the following format: 
+'''prompt...'''
+
+This is my objective: 
+
+{objective}
+"""`
+
+const prompt = PromptTemplate.fromTemplate(template)
+
+const chain = prompt.pipe(new ChatOpenAI()).pipe(new StringOutputParser())
+
+  console.log(response);
+
+  const task = "answer a question based on context provided, and ONLY that context"
+
+  response = chain.invoke({objective: task, text: text})
 
 
-  // let SYSTEM_TEMPLATE = `You are a helpful assistant who can research and provide information about anything. Upon receiving a question from the user, use the web browser to search for a website that will provide the best information to answer the question. Then use the web browser again to go to the previously found web page and summarize it's content to return to the user as the answer.
-  // In case a user asks a question that you can not answer from the provided context you may use the 'human_help' tool to send me a question to answer. If I don't reply within 5 minutes, just tell the user you are unable to answer that question at the moment and to try again later.;`;
-return NextResponse.json(text)
-
+  return NextResponse.json(response);
+ 
 }

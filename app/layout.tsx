@@ -5,9 +5,10 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { GemIcon, SettingsIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AppProvider, { AppContext } from "./context";
 import Header from "@/components/header";
+//import { publishSubscribe } from "@/ably";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -24,6 +25,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
  (AppContext);
+//  useEffect(() => {
+//   console.log("Starting Ably:1")
+//   publishSubscribe();
+// }, []);
   return (
     <html lang="en">
       <body className={cn("h-screen overflow-hidden dark:bg-gradient-to-b dark:from-black/0 dark:to-cyan-900", inter.className)}>
