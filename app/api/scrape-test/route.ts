@@ -101,24 +101,10 @@ import { convertToOpenAIFunction } from "@langchain/core/utils/function_calling"
 import { XMLOutputParser } from "@langchain/core/output_parsers";
 import { XMLAgentOutputParser } from "langchain/agents/xml/output_parser";
 import { ChainValues } from "langchain/schema";
-import { ExaSearchResults } from "@langchain/exa";
-import Exa from "exa-js";
-import { ToolExecutor } from "@langchain/langgraph/prebuilt";
-import { END, StateGraph } from "@langchain/langgraph";
-import { ElevenLabsClient, play, stream as elStream } from "elevenlabs";
-import { json } from "stream/consumers";
-import { createPineconeIndex } from "./helpers";
-import {
-  retrieveLyrics,
-  searchLyrics,
-} from "@/app/songlyrics/songlyricsdotcom";
-import { searchForSongs } from "@/app/songlyrics/mldb";
+
 
 //export const runtime = "edge";
 
-const webSite = "https://python.langchain.com/docs/get_started/introduction";
-const webSite2 = "https://www.cruisebrothers.com/specials";
-const webSite3 = "https://www.amazon.com/";
 
 export async function POST(req: Request) {
   let response: ChainValues | string = { message: "Hello" };
@@ -132,15 +118,73 @@ export async function POST(req: Request) {
     name: string;
     songs: string[];
   };
+  const command = messages[messages.length - 1].content;
 
-  const artist = await searchForSongs({
-    name: "Bon Jovi",
-    songs: ["Get Ready"],
-  });
+if(command === 'test1'){
 
-  console.log(artist);
+  try {
+    const url = "https://www.mldb.org/search?mq=Bon+Jovi&si=0&mm=0&ob=1";
+    const url2 = "https://www.mldb.org/song-9186-get-ready.html";
+    const test = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-  return NextResponse.json(artist);
+    const text = await test.text();
+    const test2 = await fetch(url2, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text2 = await test2.text();
+
+    const reply = `Test 1 url = ${url} Test 1 = ${text} Test 2 url = ${url2} Test 2 = ${text2}`
+
+    console.log(reply);
+    response = reply;
+  } catch (error) {
+    console.log(error);
+    response = "Error";
+  }
+}
+
+if(command === 'test2'){
+  try {
+    const url = "https://www.lyricsondemand.com/results.html?cx=partner-pub-1187925111528992%3A9654624337&cof=FORID%3A10&ie=UTF-8&q=Drake&sa.x=0&sa.y=0";
+    const url2 = "https://www.lyricsondemand.com/d/drakelyrics/parismortonmusiclyrics.html";
+    const test = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text = await test.text();
+    const test2 = await fetch(url2, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text2 = await test2.text();
+
+    const reply = `Test 1 url = ${url} Test 1 = ${text} Test 2 url = ${url2} Test 2 = ${text2}`
+
+    console.log(reply);
+    response = reply;
+  } catch (error) {
+    console.log(error);
+    response = "Error";
+  }
+}
+
+
+  return NextResponse.json(response);
 
   let SYSTEM_TEMPLATE = `You are a professional songwriter and have been tasked with completing the lyrics for a song about {context}.
    you have written these songs so far...

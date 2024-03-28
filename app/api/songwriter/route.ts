@@ -43,7 +43,7 @@ import {
 } from "langchain/agents/openai/output_parser";
 import { convertToOpenAIFunction } from "@langchain/core/utils/function_calling";
 import { ChainValues } from "langchain/schema";
-import { retrieveLyrics, searchLyrics } from "@/app/songlyrics";
+import { retrieveLyrics, searchLyrics } from "@/app/songlyrics/songlyricsdotcom";
 import { Artist } from "@/app/songlyrics/page";
 //export const runtime = "edge";
 
