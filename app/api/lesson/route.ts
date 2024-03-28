@@ -112,7 +112,7 @@ import {
   retrieveLyrics,
   searchLyrics,
 } from "@/app/songlyrics/songlyricsdotcom";
-import { searchForSongs } from "@/app/songlyrics/mldb";
+import { getRandomSongs, quickLyrics, searchForSongs } from "@/app/songlyrics/mldb";
 
 //export const runtime = "edge";
 
@@ -133,14 +133,18 @@ export async function POST(req: Request) {
     songs: string[];
   };
 
-  const artist = await searchForSongs({
-    name: "Bon Jovi",
-    songs: ["Get Ready"],
-  });
+  // const artist = await searchForSongs({
+  //   name: "Bon Jovi",
+  //   songs: ["Get Ready"],
+  // });
+  
 
-  console.log(artist);
+  
+  const check = await getRandomSongs("Tina Turner", 2);
 
-  return NextResponse.json(artist);
+console.log('songs found = ', check.length)
+
+  return NextResponse.json(check);
 
   let SYSTEM_TEMPLATE = `You are a professional songwriter and have been tasked with completing the lyrics for a song about {context}.
    you have written these songs so far...
