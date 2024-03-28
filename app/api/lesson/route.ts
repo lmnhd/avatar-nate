@@ -110,10 +110,6 @@ import { json } from "stream/consumers";
 import { createPineconeIndex } from "./helpers";
 import { retrieveLyrics, searchLyrics } from "@/app/songlyrics";
 
-
-
-
-
 //export const runtime = "edge";
 
 const webSite = "https://python.langchain.com/docs/get_started/introduction";
@@ -126,42 +122,81 @@ export async function POST(req: Request) {
   const {
     messages,
     systemPrompt,
-    
-  }: { messages: Message[]; systemPrompt: string} = await req.json();
+  }: { messages: Message[]; systemPrompt: string } = await req.json();
 
-type Artist = {
-  name: string;
-  songs: string[];
-};
+  type Artist = {
+    name: string;
+    songs: string[];
+  };
+  const command = messages[messages.length - 1].content;
+
+if(command === 'test1'){
+
+  try {
+    const url = "https://www.mldb.org/search?mq=Bon+Jovi&si=0&mm=0&ob=1";
+    const url2 = "https://www.mldb.org/song-9186-get-ready.html";
+    const test = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text = await test.text();
+    const test2 = await fetch(url2, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text2 = await test2.text();
+
+    const reply = `Test 1 url = ${url} Test 1 = ${text} Test 2 url = ${url2} Test 2 = ${text2}`
+
+    console.log(reply);
+    response = reply;
+  } catch (error) {
+    console.log(error);
+    response = "Error";
+  }
+}
+
+if(command === 'test2'){
+  try {
+    const url = "https://www.lyricsondemand.com/results.html?cx=partner-pub-1187925111528992%3A9654624337&cof=FORID%3A10&ie=UTF-8&q=Drake&sa.x=0&sa.y=0";
+    const url2 = "https://www.lyricsondemand.com/d/drakelyrics/parismortonmusiclyrics.html";
+    const test = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text = await test.text();
+    const test2 = await fetch(url2, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const text2 = await test2.text();
+
+    const reply = `Test 1 url = ${url} Test 1 = ${text} Test 2 url = ${url2} Test 2 = ${text2}`
+
+    console.log(reply);
+    response = reply;
+  } catch (error) {
+    console.log(error);
+    response = "Error";
+  }
+}
 
 
-const url = 'https://www.mldb.org/search?mq=Bon+Jovi&si=0&mm=0&ob=1'
-const url2 = 'https://www.mldb.org/song-9186-get-ready.html'
-const test = await fetch(url, {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-})
+  return NextResponse.json(response);
 
-const text = await test.text()
-const test2 = await fetch(url2, {
-  method: 'GET',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-
-})
-
-const text2 = await test2.text()
-
-const reply = 'TEST 1 = ' + text + 'TEST 2 = ' + text2
-
-console.log(reply)
-
-return NextResponse.json(reply)
-
-   let SYSTEM_TEMPLATE = `You are a professional songwriter and have been tasked with completing the lyrics for a song about {context}.
+  let SYSTEM_TEMPLATE = `You are a professional songwriter and have been tasked with completing the lyrics for a song about {context}.
    you have written these songs so far...
    {songs}
    
@@ -169,6 +204,5 @@ return NextResponse.json(reply)
    
    
   `;
-return NextResponse.json(response)
-
+  return NextResponse.json(response);
 }
