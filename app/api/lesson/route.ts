@@ -108,6 +108,7 @@ import { END, StateGraph } from "@langchain/langgraph";
 import { ElevenLabsClient, play, stream as elStream } from "elevenlabs";
 import { json } from "stream/consumers";
 import { createPineconeIndex } from "./helpers";
+import { retrieveLyrics, searchLyrics } from "@/app/songlyrics";
 
 
 
@@ -128,21 +129,46 @@ export async function POST(req: Request) {
     
   }: { messages: Message[]; systemPrompt: string} = await req.json();
 
+type Artist = {
+  name: string;
+  songs: string[];
+};
 
-const url = 'https://www.songlyrics.com/en-vogue/don-t-go-lyrics/'
-const result = await fetch(url, {
+
+const url = 'https://www.mldb.org/search?mq=Bon+Jovi&si=0&mm=0&ob=1'
+const url2 = 'https://www.mldb.org/song-9186-get-ready.html'
+const test = await fetch(url, {
+  method: 'GET',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+
+const text = await test.text()
+const test2 = await fetch(url2, {
   method: 'GET',
   headers: {
     'Content-Type': 'application/json',
   },
 
 })
-const text = await result.text()
-console.log(text)
 
+const text2 = await test2.text()
 
-  // let SYSTEM_TEMPLATE = `You are a helpful assistant who can research and provide information about anything. Upon receiving a question from the user, use the web browser to search for a website that will provide the best information to answer the question. Then use the web browser again to go to the previously found web page and summarize it's content to return to the user as the answer.
-  // In case a user asks a question that you can not answer from the provided context you may use the 'human_help' tool to send me a question to answer. If I don't reply within 5 minutes, just tell the user you are unable to answer that question at the moment and to try again later.;`;
-return NextResponse.json(text)
+const reply = 'TEST 1 = ' + text + 'TEST 2 = ' + text2
+
+console.log(reply)
+
+return NextResponse.json(reply)
+
+   let SYSTEM_TEMPLATE = `You are a professional songwriter and have been tasked with completing the lyrics for a song about {context}.
+   you have written these songs so far...
+   {songs}
+   
+   Now write and ONLY return the next song about {context} formatted with [Title:] and [Lyrics:]...
+   
+   
+  `;
+return NextResponse.json(response)
 
 }

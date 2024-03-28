@@ -74,6 +74,7 @@ export default function AppProvider({
   const {
     messages,
     input,
+    setInput,
     handleInputChange,
     handleSubmit,
     isLoading,
@@ -136,6 +137,7 @@ export default function AppProvider({
         setDisplaySettings,
         messages,
         input,
+        setInput,
         handleInputChange,
         handleSubmit,
         isLoading,

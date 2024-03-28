@@ -41,7 +41,7 @@ export default function RootLayout({
          
           <AppProvider>
             <Header/>
-            <div className="mt-5 -z-20 mx-auto md:w-2/3 shadow-sm">{children}</div>
+            <div className="mt-24 -z-20 mx-auto md:w-2/3 shadow-sm">{children}</div>
           </AppProvider>
         </ThemeProvider>
       </body>
