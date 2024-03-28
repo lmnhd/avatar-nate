@@ -9,7 +9,8 @@ function replaceSpacesWithPlus(str: string) {
     return result
 }
 export async function searchForSongs(artist:Artist){
-    console.log('searching for artist', artist)
+    try {
+        console.log('searching for artist', artist)
     const url = `https://www.mldb.org/search?mq=Bon+Jovi&si=0&mm=0&ob=1`
     const result = await fetch(url, {
         method: 'GET',
@@ -27,4 +28,7 @@ export async function searchForSongs(artist:Artist){
     })
     console.log(theList.length)
     return theList.length
+    } catch (error) {
+        return error
+    }
 }
