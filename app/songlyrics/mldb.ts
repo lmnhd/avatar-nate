@@ -1,3 +1,4 @@
+"use server"
 import * as Cheerio from 'cheerio'
 import { Artist } from "./page";
 
