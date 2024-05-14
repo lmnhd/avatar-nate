@@ -2,7 +2,7 @@
 import { ChatRequestOptions, JSONValue } from "ai";
 import { Message } from "postcss";
 import React, { useContext, useEffect } from "react";
-import { AppContext } from "../context";
+import { AppContext } from "../providers/context";
 import {
   FormControl,
   FormDescription,

@@ -2,7 +2,7 @@ import { Message } from "ai";
 import { ChevronDownCircle } from "lucide-react";
 import React, { useContext } from "react";
 import LoadingMessage from "./loadingmessage";
-import { AppContext } from "@/app/context";
+import { AppContext } from "@/app/providers/context";
 import { AIVoicePlatform, AudioURL } from "@/types";
 
 interface Props {

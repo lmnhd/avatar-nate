@@ -1,7 +1,7 @@
 "use client";
 import React, { useContext, useEffect } from "react";
 import { pollyGetVoiceURI, pollyGetVoiceURIFaster, whisperGetVoiceURI } from "@/lib/voices";
-import { AppContext } from "@/app/context";
+import { AppContext } from "@/app/providers/context";
 import { AIVoicePlatform, PollyVoices, WhisperVoices } from "@/types";
 import { AudioURL } from "@/types";
 

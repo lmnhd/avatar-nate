@@ -1,7 +1,7 @@
 import { GemIcon, SettingsIcon } from "lucide-react";
 import React, { useContext } from "react";
 import { ThemeToggle } from "./theme-toggle";
-import { AppContext } from "@/app/context";
+import { AppContext } from "@/app/providers/context";
 import { Message } from "ai";
 import { Speech, AudioWaveform, SpeakerIcon } from "lucide-react";
 import VoiceSynthesizer from "./speech/voicesynthesizer";

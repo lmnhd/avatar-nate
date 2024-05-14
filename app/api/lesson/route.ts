@@ -112,7 +112,13 @@ import {
   retrieveLyrics,
   searchLyrics,
 } from "@/app/songlyrics/songlyricsdotcom";
-import { getRandomSongs, quickLyrics, searchForSongs } from "@/app/songlyrics/mldb";
+import {
+  LyricsResult,
+  getQuickLyrics,
+  getRandomSongs,
+  searchForSongs,
+} from "@/app/songlyrics/mldb";
+import { removeBracketText } from "@/lib/utils";
 
 //export const runtime = "edge";
 
@@ -120,39 +126,144 @@ const webSite = "https://python.langchain.com/docs/get_started/introduction";
 const webSite2 = "https://www.cruisebrothers.com/specials";
 const webSite3 = "https://www.amazon.com/";
 
+type Artist = {
+  name: string;
+  songs: string[];
+};
+const data = new experimental_StreamData();
 export async function POST(req: Request) {
   let response: ChainValues | string = { message: "Hello" };
   //let result: any = "testing";
   const {
     messages,
     systemPrompt,
-  }: { messages: Message[]; systemPrompt: string } = await req.json();
+    artists,
+    keepItClean,
+  }: {
+    messages: Message[];
+    systemPrompt: string;
+    artists: Artist[];
+    keepItClean: boolean;
+  } = await req.json();
 
-  type Artist = {
-    name: string;
-    songs: string[];
-  };
+  const { stream, handlers } = LangChainStream({
+    // onCompletion: (resp) => {
+    //   data.append(JSON.stringify({response: resp})); // example
+    //   data.close();
+    // },
+    onCompletion: (resp) => {
+      console.log("onCompletion", resp);
+    },
+    onStart: () => {
+      console.log("onStart");
+      // data.appendMessageAnnotation({ text: "onStart" });
+      // data.append(JSON.stringify({ text2: "onStart" }));
+    },
+    onText: (resp) => {
+      console.log("onText", resp);
+      // data.appendMessageAnnotation({ text: "resp" });
+      // data.append(JSON.stringify({ text2: "resp" }));
+    },
 
-  // const artist = await searchForSongs({
-  //   name: "Bon Jovi",
-  //   songs: ["Get Ready"],
-  // });
-  
+    onToken: (resp) => {
+      console.log("onToken", resp);
+      // data.appendMessageAnnotation({ text: resp });
+      // data.append(JSON.stringify({ text2: resp }));
+    },
+    onFinal: (resp) => {
+      console.log("onFinal", resp);
+      //data.appendMessageAnnotation({ text: "resp" });
+      //data.append(audio);
+      data.close();
+    },
+    experimental_streamData: true,
+  });
 
-  
-  const check = await getRandomSongs("Tina Turner", 2);
+  const _artists:Artist[] = [
+    { name: "Cher", songs: [] },
+    // { name: "Ed Sheeran", songs: ["Shape of You", "Perfect", "Thinking Out Loud"] },
+     { name: "Beyonce", songs: [] },
+  ]
 
-console.log('songs found = ', check.length)
+  async function writeSongLyrics(artists: Artist[]) {
+    const lyricSheetArray: LyricsResult[] = [];
+   for (let i = 0; i < artists.length; i++) {
+      const artist = artists[i];
+      if (artist.songs.length > 0) {
+        const songs = artist.songs;
+        for (let i = 0; i < songs.length; i++) {
+          const song = songs[i];
+          const lyrics = await getQuickLyrics(artist.name, song);
+          if (lyrics && lyrics.lyrics !== "") {
+            lyricSheetArray.push({
+              name: removeBracketText(lyrics.name),
+              lyrics: lyrics.lyrics,
+              artist: lyrics.artist,
+            });
+          }
+          await new Promise((resolve) => setTimeout(resolve, 3000));
+        }
+      } else {
+        const lyrics = await getRandomSongs(artist.name, 1);
+        if (lyrics.length > 0) {
+          lyricSheetArray.push(lyrics[0]);
+        }
+      }
+    };
 
-  return NextResponse.json(check);
+    if (lyricSheetArray.length === 0) {
+      return "research failed, try with different params/artists/songs";
+    }
+    return lyricSheetArray.map((lyric) => {
+      return `[Title: ${lyric.name}]\n[Lyrics: ${lyric.lyrics}]`;
+    }).join("\n\n");
+  }
+
+  const songSheet = await writeSongLyrics(_artists);
+  // if (songSheet === "research failed, try with different params/artists/songs") {
+  //   response = songSheet;
+  //   return NextResponse.json(response);
+  // }
+  console.log("songSheet", songSheet);
+
+  return NextResponse.json(songSheet);
 
   let SYSTEM_TEMPLATE = `You are a professional songwriter and have been tasked with completing the lyrics for a song about {context}.
-   you have written these songs so far...
-   {songs}
-   
-   Now write and ONLY return the next song about {context} formatted with [Title:] and [Lyrics:]...
-   
-   
-  `;
+you have written these songs so far...
+{songs}
+
+Now write and ONLY return the next song about {context} formatted with [Title:] and [Lyrics:]...
+
+
+`;
+const chatHistory = messages.slice(0, -1).map((message) => {
+  return message.role == "user"
+    ? new HumanMessage(message.content)
+    : new AIMessage(message.content);
+});
+const MEMORY_KEY = "chat_history";
+const memoryPrompt = ChatPromptTemplate.fromMessages([
+  ["system", SYSTEM_TEMPLATE],
+
+  new MessagesPlaceholder(MEMORY_KEY),
+
+ // new MessagesPlaceholder("agent_scratchpad"),
+]);
+const res = await memoryPrompt.format({
+  chat_history: chatHistory,
+  songs: songSheet,
+  context: systemPrompt,
+  // agent_scratchpad: [],
+  input: "",
+});
+  const model = new ChatOpenAI({
+    callbacks: [handlers],
+    modelName: "gpt-3.5-turbo",
+    maxTokens: 200,
+    temperature: 0.5,
+    topP: 1,
+    streaming: true,
+  });
+console.log("res", res);
   return NextResponse.json(response);
 }

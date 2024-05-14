@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import VoiceSynthesizer from './speech/voicesynthesizer';
-import { AppContext } from '@/app/context';
+import { AppContext } from '@/app/providers/context';
 import { Message } from 'ai';
 
 interface Props {

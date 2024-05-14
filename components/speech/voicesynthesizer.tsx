@@ -1,5 +1,5 @@
 "use client";
-import { AppContext } from "@/app/context";
+import { AppContext } from "@/app/providers/context";
 import { AIVoicePlatform, PollyVoicesEnum, WhisperVoicesEnum } from "@/types";
 import { Message } from "ai";
 import React, { useContext, useEffect, useState } from "react";

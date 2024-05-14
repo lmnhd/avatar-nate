@@ -11,7 +11,7 @@ import ChatTypeInput from "@/components/chattypeinput";
 import VoiceComponent from "@/components/voicecomponent";
 import Messages from "@/components/messages";
 import { stat } from "fs";
-import { AppContext } from "./context";
+import { AppContext } from "./providers/context";
 import SystemPrompt from "@/components/systemprompt";
 import { JSONValue, Message } from "ai";
 import { getFetchUrl } from "@/lib/getFetchUrl";

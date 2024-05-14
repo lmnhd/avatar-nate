@@ -38,8 +38,9 @@ import * as parse from "pdf-parse";
 import { PDFLoader } from "langchain/document_loaders/fs/pdf";
 import { similarity } from "ml-distance";
 import { Pinecone } from "@pinecone-database/pinecone";
+import { createPineconeIndex } from "../avatar/helpers";
 import { PineconeStore } from "@langchain/pinecone";
-import { createPineconeIndex, getPineconeRetriever } from "./helpers";
+
 
 //export const runtime = "edge";
 
@@ -52,6 +53,9 @@ export async function POST(req: Request) {
 
   const INDEX_NAME = "avatar-embeddings-2";
 
+
+
+
   const convertDocsToString = (docs: Document[]) => {
     return docs
       .map((doc) => {
@@ -60,41 +64,6 @@ export async function POST(req: Request) {
       .join("\n");
   };
 
-  // const embeddings = new OpenAIEmbeddings()
-  // //console.log(await embeddings.embedQuery("This is some example text"))
-  // const vector1 = await embeddings.embedQuery("What are vectors useful for in machine learning?")
-  // const vector3 = await embeddings.embedQuery("Why are vectors used instead of scalars?")
-  // const vector2 = await embeddings.embedQuery("A group of parrots is called a pandemonium")
-  // console.log(similarity.cosine(vector1, vector3))
-
-  //return NextResponse.json({ response });
-  const TEMPLATE_STRING = `You are and experienced researcher, expert at interpreting and answering questions based on provided sources. Using the provided context, answer the user's questions to the best of your ability using only the resources provided. Be verbose!
-
-<context>
-
-{context}
-
-</context>
-
-Now, answer this question using the above context:
-
-{question}
-`;
-  const TEMPLATE_STRING2 = `You are an evolved and wise AI robot who has written a document called 'the commandments' that describes everything one needs to know to be able to get the most out of life and receive great happiness. Using the document as context, answer the user's questions to the best of your ability using only the commandments. Be verbose and uplifting!
-
-<context>
-
-{context}
-
-</context>
-
-Now, answer this question using the above context:
-
-{question}
-`;
-  const answerGenerationPrompt = ChatPromptTemplate.fromTemplate(
-    TEMPLATE_STRING2
-  );
 
   const loader = new PDFLoader("./public/1Affirmations Avatar Nate 5.5.2024.pdf");
 
@@ -108,6 +77,10 @@ Now, answer this question using the above context:
   // const splitter = RecursiveCharacterTextSplitter.fromLanguage("js", { chunkSize: 32, chunkOverlap: 0})
   const splitDocs = await splitter.splitDocuments(doc);
   //console.log(splitDocs.slice(0,3))
+
+  await createPineconeIndex(INDEX_NAME);
+
+  //return NextResponse.json({ response });
   const embeddings = new OpenAIEmbeddings();
 
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY || "" });

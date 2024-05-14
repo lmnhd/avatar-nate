@@ -5,7 +5,7 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Button } from "./ui/button";
-import { AppContext } from "@/app/context";
+import { AppContext } from "@/app/providers/context";
 import { Message } from "ai";
 function SystemPrompt() {
   const {

@@ -11,8 +11,10 @@ export const convertDocsToString = (docs: Document[]) => {
     .join("\n");
 };
 
-export const createPineconeIndex = async (index_name: string) => {
-  let result: any = { status: 200 };
+export const createPineconeIndex = async (
+  index_name: string,
+): Promise<{ status: number; error?: string }> => {
+  let result: { status: number; error?: string } = { status: 200 };
 
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY || "" });
 

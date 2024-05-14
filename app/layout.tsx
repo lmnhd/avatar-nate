@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { GemIcon, SettingsIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useContext, useEffect, useState } from "react";
-import AppProvider, { AppContext } from "./context";
+import AppProvider, { AppContext } from "./providers/context";
 import Header from "@/components/header";
 //import { publishSubscribe } from "@/ably";
 

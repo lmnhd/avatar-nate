@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSpeechSynthesis } from "react-speech-kit";
 import { JSONValue, Message } from "ai";
-import { AppContext } from "../context";
+import { AppContext } from "../providers/context";
 import Messages from "@/components/messages";
 import SystemPrompt from "@/components/systemprompt";
 import ChatTypeInput from "@/components/chattypeinput";
@@ -77,6 +77,7 @@ export default function Chat() {
 
   useEffect(() => {
     setApi('api/avatar')
+   // setApi('api/uploadavatar')
     setUseSpeech(true);
     setUseVoice(true);
 

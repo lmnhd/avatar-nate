@@ -173,7 +173,7 @@ export async function POST(req: Request) {
   });
 
   // RETRIEVER
-  const INDEX_NAME = "avatar-embeddings-1";
+  const INDEX_NAME = "avatar-embeddings-2";
   const retriever = await getPineconeRetriever(INDEX_NAME);
 
   // const test = convertDocsToString(await retriever.invoke("I am worried about next week?"));

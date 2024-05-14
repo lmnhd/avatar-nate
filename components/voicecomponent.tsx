@@ -7,7 +7,7 @@ import VoiceSynthesizer from "./speech/voicesynthesizer";
 import { useFormState } from "react-dom";
 import transcribe from "@/actions/transcript";
 import { Message } from "ai";
-import { AppContext } from "@/app/context";
+import { AppContext } from "@/app/providers/context";
 
 const initialState = {
   response: "",
