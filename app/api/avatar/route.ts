@@ -232,7 +232,7 @@ export async function POST(req: Request) {
     modelName: "gpt-4-turbo",
     temperature: 0,
     streaming: true,
-    maxTokens: 4000,
+    maxTokens: -1,
     verbose: true,
   });
 
