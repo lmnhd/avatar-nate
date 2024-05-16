@@ -229,7 +229,7 @@ export async function POST(req: Request) {
   });
 
   const model = new ChatOpenAI({
-    modelName: "gpt-4-turbo",
+    modelName: "gpt-3.5-turbo",
     temperature: 0,
     streaming: true,
     maxTokens: -1,
