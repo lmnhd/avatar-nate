@@ -8,20 +8,16 @@ import { Button } from "./ui/button";
 import { AppContext } from "@/app/providers/context";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-
 import { Message } from "ai";
 import { getFetchUrl } from "../lib/getFetchUrl";
 import { set } from "zod";
 
-
 function SystemPrompt({
   isLoading,
   setIsLoading,
-  
 }: {
   isLoading: boolean;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  
 }) {
   const {
     systemPrompt,
@@ -36,6 +32,7 @@ function SystemPrompt({
     setShowPrompt: React.Dispatch<React.SetStateAction<boolean>>;
     displaySettings: boolean;
   } = useContext(AppContext);
+  //const { toast } = useToast();
 
   const fileInput = useRef<HTMLInputElement>(null);
   const [pdf, setPdf] = React.useState<File | null>(null);
@@ -74,8 +71,6 @@ function SystemPrompt({
           </TabsContent>
           <TabsContent value="data">
             <div>
-             
-
               <form
                 className={`flex items-center justify-between w-full h-96 bg-gradient-to-b from-white via-white/20 to-white/0 backdrop-blur-sm dark:bg-black? px-6`}
                 action={async (fd) => {
@@ -102,43 +97,56 @@ function SystemPrompt({
                     }
                   }}
                 />
-                <Button
-                  type={"submit"}
-                  variant={"secondary"}
-                  className="w-1/4"
-                  onClick={async () => {
-                    console.log("PDF: ", pdf);
-                    if (!pdf || pdf.type !== "application/pdf") {
-                      window.alert("Please select a PDF file to upload");
-                      return;
-                    }
-                    setIsLoading(true);
+                {pdf !== null && (
+                  <Button
+                    type={"submit"}
+                    variant={"secondary"}
+                    className="w-1/4"
+                    onClick={async () => {
+                      console.log("PDF: ", pdf);
+                      if (!pdf || pdf.type !== "application/pdf") {
+                        window.alert("Please select a PDF file to upload");
+                        return;
+                      }
+                      setIsLoading(true);
 
-                    //return;
+                      //return;
+                      let result: any = {}
+                      var fd = new FormData();
+                      fd.append("files", pdf!);
+                      console.log("Files: ", fd);
 
-                    var fd = new FormData();
-                    fd.append("files", pdf!);
-                    console.log("Files: ", fd);
+                      var requestOptions = { method: "POST", body: fd };
+                      const url = getFetchUrl("/api/uploadavatar");
 
-                    var requestOptions = { method: "POST", body: fd };
-                    const url = getFetchUrl("/api/uploadavatar");
+                      console.log("Fetching URL: ", url);
 
-                    console.log("Fetching URL: ", url);
+                      try {
+                        const response = await fetch(url, {
+                          method: "POST",
+                          headers: {
+                            contentType: "multipart/form-data",
+                          },
+                          body: fd,
+                        });
+                        result = await response.json();
+                        console.log("Result: ", result);
+                       
+                      } catch (error) {
+                        console.error("Error: ", error);
+                      }
 
-                    const response = await fetch(url, {
-                      method: "POST",
-                      headers: {
-                        contentType: "multipart/form-data",
-                      },
-                      body: fd,
-                    });
+                      setShowPrompt(false);
+                      setIsLoading(false);
+                      setPdf(null);
 
-                    console.log("Response: ", response);
-                    setIsLoading(false);
-                  }}
-                >
-                  Upload
-                </Button>
+                      console.log("PDF UPLOAD COMPLETE")
+                      window.alert("PDF UPLOAD COMPLETE");
+                    }}
+                  >
+                    Upload
+                  </Button>
+                )}
               </form>
             </div>
           </TabsContent>
