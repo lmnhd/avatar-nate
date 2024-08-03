@@ -4,10 +4,10 @@ import { Message } from "ai";
 import { useChat } from "ai/react";
 
 import { Howl, Howler} from "howler";
-import { AudioURL } from "@/types";
+import { AudioURL, IndexName } from "@/types";
 
 import { AIVoicePlatform } from "@/types";
-import { IndexName } from "../api/avatar/route";
+
 
 type State = {
   messages: Message[];

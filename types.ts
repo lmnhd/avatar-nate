@@ -193,3 +193,9 @@ export enum PollyVoicesEnum {
   Zeina = "Zeina",
   Zhiyu = "Zhiyu",
 }
+
+export type IndexName = 'avatar-nate-custom' | 'avatar-embeddings-2'
+export enum IndexNameEnum {
+  'avatar-nate-custom' = 'avatar-nate-custom',
+  'avatar-embeddings-2' = 'avatar-embeddings-2'
+}

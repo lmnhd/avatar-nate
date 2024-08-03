@@ -107,17 +107,14 @@ import { ToolExecutor } from "@langchain/langgraph/prebuilt";
 import { END, StateGraph } from "@langchain/langgraph";
 import { ElevenLabsClient, play, stream as elStream } from "elevenlabs";
 import { json } from "stream/consumers";
+import { IndexName } from "@/types";
 
 //export const runtime = "edge";
 
 const webSite = "https://python.langchain.com/docs/get_started/introduction";
 const webSite2 = "https://www.cruisebrothers.com/specials";
 const webSite3 = "https://www.amazon.com/";
-export type IndexName = 'avatar-nate-custom' | 'avatar-embeddings-2'
-export enum IndexNameEnum {
-  'avatar-nate-custom' = 'avatar-nate-custom',
-  'avatar-embeddings-2' = 'avatar-embeddings-2'
-}
+
 export async function POST(req: Request) {
   let response: ChainValues | string = { message: "Hello" };
   let result: any = "testing";

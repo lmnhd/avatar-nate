@@ -25,7 +25,8 @@ import SystemPrompt from "@/components/systemprompt";
 import ChatTypeInput from "@/components/chattypeinput";
 import VoiceComponent from "@/components/voicecomponent";
 import LoadingOverlay from "@/components/loading-overlay";
-import { IndexName, IndexNameEnum } from "@/app/api/avatar/route";
+import { IndexName, IndexNameEnum } from "@/types";
+
 
 export default function Chat() {
   const {
