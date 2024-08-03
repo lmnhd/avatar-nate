@@ -1,4 +1,4 @@
 export function getFetchUrl(route: string) {
   return `${
-    process.env.NODE_ENV === "production" ? process.env.VERCEL_URL! : "http://localhost:3000"}/${route}`;
+    process.env.NODE_ENV === "production" ? 'https://avatar-nate.vercel.app' : "http://localhost:3000"}/${route}`;
 }
