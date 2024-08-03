@@ -40,7 +40,7 @@ import { similarity } from "ml-distance";
 import { Pinecone } from "@pinecone-database/pinecone";
 import { createPineconeIndex } from "../avatar/helpers";
 import { PineconeStore } from "@langchain/pinecone";
-import { useToast } from "@/components/ui/use-toast";
+
 
 //export const runtime = "edge";
 
