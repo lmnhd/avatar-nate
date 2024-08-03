@@ -35,14 +35,13 @@ export const createPineconeIndex = async (
   return result;
 };
 
-export const getPineconeRetriever = async (index_name: string) => {
+export const getPineconeRetriever = async (index_name: string, nameSpace?: string) => {
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY || "" });
   const pineconeIndex = pinecone.index(index_name);
+  const options = nameSpace ? { pineconeIndex, namespace: nameSpace } : {pineconeIndex};
   const vectorStore = await PineconeStore.fromExistingIndex(
     new OpenAIEmbeddings(),
-    {
-      pineconeIndex,
-    }
+    options
   );
   return vectorStore.asRetriever();
 };

@@ -41,7 +41,6 @@ import { Pinecone } from "@pinecone-database/pinecone";
 import { createPineconeIndex } from "../avatar/helpers";
 import { PineconeStore } from "@langchain/pinecone";
 
-
 //export const runtime = "edge";
 
 const webSite = "https://python.langchain.com/docs/get_started/introduction";
@@ -49,12 +48,13 @@ const webSite2 = "https://www.cruisebrothers.com/specials";
 
 export async function POST(req: Request) {
   let response = { message: "Hello" };
-  const { messages }: { messages: Message[] } = await req.json();
 
-  const INDEX_NAME = "avatar-embeddings-2";
+  const formData = await req.formData();
+  const file = formData.getAll("files")[0];
 
+  console.log("File: ", file);
 
-
+  const INDEX_NAME = "avatar-nate-custom";
 
   const convertDocsToString = (docs: Document[]) => {
     return docs
@@ -64,8 +64,7 @@ export async function POST(req: Request) {
       .join("\n");
   };
 
-
-  const loader = new PDFLoader("./public/1Affirmations Avatar Nate 5.5.2024.pdf");
+  const loader = new PDFLoader(file);
 
   const doc = await loader.load();
   //console.log(doc.slice(0,3))
@@ -86,14 +85,18 @@ export async function POST(req: Request) {
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY || "" });
 
   const pineconeIndex = pinecone.index(INDEX_NAME);
+
+  
   //const retriever = await getPineconeRetriever(INDEX_NAME);
+
+  console.log("Uploading Docs...", splitDocs.length); 
 
   await PineconeStore.fromDocuments(splitDocs, embeddings, {
     pineconeIndex,
     maxConcurrency: 5,
+    namespace: "avatar-1",
   });
 
-  
   // return new StreamingTextResponse(stream)
   return NextResponse.json({ response });
 }

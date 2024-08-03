@@ -7,6 +7,7 @@ import { Howl, Howler} from "howler";
 import { AudioURL } from "@/types";
 
 import { AIVoicePlatform } from "@/types";
+import { IndexName } from "../api/avatar/route";
 
 type State = {
   messages: Message[];
@@ -67,6 +68,7 @@ export default function AppProvider({
   const [systemPrompt, setSystemPrompt] = useState(
     "You are a helpful assistant"
   );
+  const [indexName, setIndexName] = useState<IndexName>("avatar-nate-custom");
   const [api, setApi] = useState("api/lesson");
   const [aiVoicePlatform, setAIVoicePlatform] = useState<AIVoicePlatform>(
     "standard"
@@ -81,12 +83,14 @@ export default function AppProvider({
     data,
     metadata,
     append,
+    
   } = useChat({
     //api: '/api/conversation-retrieval-chain'
     //api: '/api/agent'
     api: `/${api}`,
     body: {
       systemPrompt: systemPrompt,
+      indexName
     },
   });
 
@@ -172,7 +176,9 @@ export default function AppProvider({
         playMessageByID,
         playAudio,
         audioURLs,
-        setAudioURLs
+        setAudioURLs,
+        indexName,
+        setIndexName,
 
       }}
     >

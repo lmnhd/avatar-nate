@@ -113,14 +113,24 @@ import { json } from "stream/consumers";
 const webSite = "https://python.langchain.com/docs/get_started/introduction";
 const webSite2 = "https://www.cruisebrothers.com/specials";
 const webSite3 = "https://www.amazon.com/";
-
+export type IndexName = 'avatar-nate-custom' | 'avatar-embeddings-2'
+export enum IndexNameEnum {
+  'avatar-nate-custom' = 'avatar-nate-custom',
+  'avatar-embeddings-2' = 'avatar-embeddings-2'
+}
 export async function POST(req: Request) {
   let response: ChainValues | string = { message: "Hello" };
   let result: any = "testing";
   const {
     messages,
     systemPrompt,
-  }: { messages: Message[]; systemPrompt: string } = await req.json();
+    indexName
+  }: { messages: Message[]; systemPrompt: string, indexName: IndexName  } = await req.json();
+
+  console.log("Messages", messages, "System Prompt", systemPrompt, "Index Name", indexName);
+
+ // return NextResponse.json(response);
+
 
   const SYSTEM_TEMPLATE = `${systemPrompt}
   
@@ -173,7 +183,7 @@ export async function POST(req: Request) {
   });
 
   // RETRIEVER
-  const INDEX_NAME = "avatar-embeddings-2";
+  const INDEX_NAME = indexName;
   const retriever = await getPineconeRetriever(INDEX_NAME);
 
   // const test = convertDocsToString(await retriever.invoke("I am worried about next week?"));
@@ -203,7 +213,8 @@ export async function POST(req: Request) {
       },
     }),
     new WebBrowser({
-      model: new ChatOpenAI({ modelName: "gpt-3.5-turbo" }),
+     // model: new ChatOpenAI({ modelName: "gpt-3.5-turbo" }),
+      model: new ChatOpenAI({ modelName: "gpt-4o-mini" }),
       embeddings: new OpenAIEmbeddings(),
     }),
 
@@ -295,9 +306,9 @@ export async function POST(req: Request) {
     )
     .catch(console.error);
 
-  console.log(response);
+  console.log('INDEX_NAME', INDEX_NAME);
 
-  console.log(response);
+  //console.log(response);
 
   //return NextResponse.json(response);
   return new StreamingTextResponse(stream, {}, data);
