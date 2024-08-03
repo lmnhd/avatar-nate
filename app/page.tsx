@@ -118,7 +118,7 @@ export default function Chat() {
 
   return (
     <div className="h-full scrollbar-hide ">
-      <SystemPrompt />
+      <SystemPrompt isLoading={false} setIsLoading={() => {}} />
       <div>
         {displaySettings && <div className="h-48" />}
         <Messages messages={messages} />
