@@ -26,7 +26,7 @@ import ChatTypeInput from "@/components/chattypeinput";
 import VoiceComponent from "@/components/voicecomponent";
 import LoadingOverlay from "@/components/loading-overlay";
 import { IndexName, IndexNameEnum } from "@/types";
-
+import { Label } from "@/components/ui/label";
 
 export default function Chat() {
   const {
@@ -54,6 +54,8 @@ export default function Chat() {
     setShowPrompt,
     systemPrompt,
     setSystemPrompt,
+    extrasOBJ,
+    setExtrasOBJ,
   }: {
     displaySettings: boolean;
     setDisplaySettings: React.Dispatch<React.SetStateAction<boolean>>;
@@ -70,7 +72,7 @@ export default function Chat() {
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
     isLoading: boolean;
-    
+
     data: JSONValue[];
     metadata: Object | undefined;
     api: string;
@@ -80,9 +82,14 @@ export default function Chat() {
     setShowPrompt: React.Dispatch<React.SetStateAction<boolean>>;
     setSystemPrompt: React.Dispatch<React.SetStateAction<string>>;
     systemPrompt: string;
+    extrasOBJ: any;
+    setExtrasOBJ: React.Dispatch<React.SetStateAction<any>>;
   } = useContext(AppContext);
 
   const [backGroundWorking, setBackGroundWorking] = useState(false);
+  const [modelNames, setModelNames] = useState<"gpt-3.5-turbo" | "gpt-4o-mini">(
+    "gpt-4o-mini"
+  );
 
   // const [systemPrompt, setSystemPrompt] = useState(
   //   "You are a highly evolved AI robot with great wisdom and deep spiritual insights who has written a secret document that only you have access to called 'the commandments'. This document describes everything one needs to know to be able to get the most out of life and enjoy great happiness. Using the document as context without mentioning it's existence, answer the user's questions to the best of your ability using only the commandments, as if they are you own beliefs. Make your answers short and sweet with a touch of humor unless otherwise instructed!"
@@ -96,7 +103,9 @@ export default function Chat() {
     setSystemPrompt(
       `You are an evolved AI robot with great wisdom and deep spiritual insights. You have written a document which describes everything one needs to know to be able to get the most out of life and enjoy great happiness. Using the context below to find the closest answer to users questions, then quietly decide if this question is in a historical context or a current context, and use one of your search tools to research and retrieve information that supports your answer and include it along with citations of the source. Keep final answers to a maximum of 3 paragraphs.`
     );
-    setIndexName(IndexNameEnum["avatar-nate-custom"])
+    setIndexName(IndexNameEnum["avatar-nate-custom"]);
+
+    setExtrasOBJ({ modelName: modelNames });
   }, []);
 
   useEffect(() => {}, [transcript]);
@@ -115,26 +124,57 @@ export default function Chat() {
 
   return (
     <div className="h-full scrollbar-hide ">
-      <LoadingOverlay loading={backGroundWorking} loadingText="Please Wait..." />
-      <SystemPrompt isLoading={backGroundWorking} setIsLoading={setBackGroundWorking} />
-      <Select
+      <LoadingOverlay
+        loading={backGroundWorking}
+        loadingText="Please Wait..."
+      />
+      <SystemPrompt
+        isLoading={backGroundWorking}
+        setIsLoading={setBackGroundWorking}
+      />
+
+      <div>
+        {displaySettings && <div className="h-48" />}
+       
+        {!showPrompt  && <div className="h-fit w-full flex items-center justify-center gap-4 p-4 text-xs">
+            <Label className="">Select Data Source</Label>
+            <Select
               onValueChange={(value) => {
                 console.log("Value: ", value);
                 setIndexName(value as IndexName);
               }}
-              >
-                <SelectTrigger className="w-[180px]">
-                  <SelectValue  placeholder="Custom" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={IndexNameEnum["avatar-embeddings-2"]}>{'Original'}</SelectItem>
-                  <SelectItem value={IndexNameEnum["avatar-nate-custom"]}>{'Custom'}</SelectItem>
-                </SelectContent>
-              </Select>
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Custom" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={IndexNameEnum["avatar-embeddings-2"]}>
+                  {"Original"}
+                </SelectItem>
+                <SelectItem value={IndexNameEnum["avatar-nate-custom"]}>
+                  {"Custom"}
+                </SelectItem>
+              </SelectContent>
+            </Select>
 
-      <div>
-        {displaySettings && <div className="h-48" />}
-        <Messages messages={messages} />
+            <Label className="">Select Model</Label>
+            <Select
+              onValueChange={(value) => {
+                console.log("Value: ", value);
+                setModelNames(value as "gpt-3.5-turbo" | "gpt-4o-mini");
+                setExtrasOBJ({ modelName: value });
+              }}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="gpt-4o-mini" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="gpt-3.5-turbo">{"gpt-3.5-turbo"}</SelectItem>
+                <SelectItem value="gpt-4o-mini">{"gpt-4o-mini"}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>}
+          <Messages messages={messages} />
         <div>
           {!useVoice && (
             <ChatTypeInput
@@ -143,6 +183,7 @@ export default function Chat() {
               input={input}
             />
           )}
+        
 
           {useVoice && (
             <VoiceComponent

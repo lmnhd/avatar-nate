@@ -121,12 +121,16 @@ export async function POST(req: Request) {
   const {
     messages,
     systemPrompt,
-    indexName
-  }: { messages: Message[]; systemPrompt: string, indexName: IndexName  } = await req.json();
+    indexName,
+    extrasOBJ
+  }: { messages: Message[]; systemPrompt: string, indexName: IndexName, extrasOBJ: any  } = await req.json();
 
   console.log("Messages", messages, "System Prompt", systemPrompt, "Index Name", indexName);
 
- // return NextResponse.json(response);
+  const {modelName} = extrasOBJ;
+
+  console.log('Model Name', modelName);
+  //return NextResponse.json(response);
 
 
   const SYSTEM_TEMPLATE = `${systemPrompt}
@@ -181,7 +185,17 @@ export async function POST(req: Request) {
 
   // RETRIEVER
   const INDEX_NAME = indexName;
-  const retriever = await getPineconeRetriever(INDEX_NAME);
+  
+  const retriever = INDEX_NAME === "avatar-embeddings-2" ? await getPineconeRetriever(INDEX_NAME) : await getPineconeRetriever(INDEX_NAME, "avatar-1");
+
+  // const test = convertDocsToString(await retriever.invoke(messages[messages.length - 1].content));
+
+  // // const test = convertDocsToString(await retriever.invoke("I am worried about next week?"));
+
+  // console.log("TEST RETRIEVER...", test);
+  // console.log("Index Name", INDEX_NAME);
+
+  //return new StreamingTextResponse(stream, {}, data);
 
   // const test = convertDocsToString(await retriever.invoke("I am worried about next week?"));
 
@@ -237,7 +251,7 @@ export async function POST(req: Request) {
   });
 
   const model = new ChatOpenAI({
-    modelName: "gpt-3.5-turbo",
+    modelName: modelName,
     temperature: 0,
     streaming: true,
     maxTokens: -1,

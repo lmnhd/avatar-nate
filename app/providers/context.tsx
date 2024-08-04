@@ -60,6 +60,8 @@ export default function AppProvider({
   const [volume, setVolume] = useState(1);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
 
+  const [extrasOBJ, setExtrasOBJ] = useState<any>(null)
+
   const [audioURLs, setAudioURLs] = useState<AudioURL[]>([]);
   const [useVoice, setUseVoice] = useState(false);
   const [useSpeech, setUseSpeech] = useState(false);
@@ -90,7 +92,8 @@ export default function AppProvider({
     api: `/${api}`,
     body: {
       systemPrompt: systemPrompt,
-      indexName
+      indexName,
+      extrasOBJ
     },
   });
 
@@ -179,6 +182,8 @@ export default function AppProvider({
         setAudioURLs,
         indexName,
         setIndexName,
+        setExtrasOBJ,
+        extrasOBJ
 
       }}
     >

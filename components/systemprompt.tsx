@@ -38,13 +38,13 @@ function SystemPrompt({
   const [pdf, setPdf] = React.useState<File | null>(null);
   return (
     <Collapsible
-      className="fixed flex flex-col items-center justify-center w-screen border border-t-0 left-0  top-16"
+      className="fixed flex flex-col items-center justify-center w-screen border border-t-0 left-0 top-16"
       open={showPrompt && !displaySettings}
       //open={true}
       onOpenChange={(open) => setShowPrompt(open)}
     >
       <CollapsibleTrigger className="w-full">
-        <div className="h-6 text-white mx-auto  ">...</div>
+        <div className="h-6 dark:text-white mx-auto  ">...</div>
       </CollapsibleTrigger>
       <CollapsibleContent className="flex flex-col items-center justify-center w-screen lg:w-2/3? mx-auto">
         <Tabs defaultValue="system" className="w-full">
